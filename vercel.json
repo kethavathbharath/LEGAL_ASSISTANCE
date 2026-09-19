@@ -1,0 +1,23 @@
+{
+    "version": 2,
+    "buildCommand": "pnpm install && pnpm run build",
+    "outputDirectory": "dist/public",
+    "installCommand": "pnpm install",
+    "framework": null,
+    "functions": {
+        "api/index.ts": {
+            "memory": 1024,
+            "maxDuration": 30
+        }
+    },
+    "rewrites": [
+        {
+            "source": "/api/(.*)",
+            "destination": "/api/index.ts"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ]
+}
