@@ -1,11 +1,11 @@
 {
     "version": 2,
-    "buildCommand": "pnpm install && pnpm run build",
-    "outputDirectory": "dist/public",
+    "buildCommand": "pnpm install && vite build && esbuild api/index.ts --platform=node --bundle --packages=external --format=esm --outfile=api/index.js",
     "installCommand": "pnpm install",
+    "outputDirectory": "dist/public",
     "framework": null,
     "functions": {
-        "api/index.ts": {
+        "api/index.js": {
             "memory": 1024,
             "maxDuration": 30
         }
@@ -13,7 +13,7 @@
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "destination": "/api/index.ts"
+            "destination": "/api/index.js"
         },
         {
             "source": "/(.*)",
