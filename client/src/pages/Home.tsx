@@ -282,6 +282,12 @@ export default function Home() {
     Record<string, boolean>
   >({});
   const [showAllClauses, setShowAllClauses] = useState(false);
+  // Never block the UI indefinitely — give the server 3 s then show the app
+  const [loadingTimedOut, setLoadingTimedOut] = useState(false);
+  useEffect(() => {
+    const t = window.setTimeout(() => setLoadingTimedOut(true), 3000);
+    return () => window.clearTimeout(t);
+  }, []);
 
   const demoQuery = trpc.legal.demo.useQuery(undefined, {
     staleTime: Infinity,
@@ -428,7 +434,7 @@ export default function Home() {
     setMobileNavOpen(false);
   };
 
-  if (!activeDocument || demoQuery.isLoading)
+  if ((!activeDocument || demoQuery.isLoading) && !loadingTimedOut)
     return (
       <div className="loading-screen">
         <Loader2 className="spin" size={28} />
@@ -846,8 +852,8 @@ export default function Home() {
                         {(analysis?.parties.length
                           ? analysis.parties
                           : [
-                              "Parties were not clearly named in the extracted text.",
-                            ]
+                            "Parties were not clearly named in the extracted text.",
+                          ]
                         ).map(item => (
                           <li key={item}>
                             <span className="list-bullet" />
@@ -1334,8 +1340,8 @@ export default function Home() {
                       <span>
                         {obligations.length
                           ? Math.round(
-                              (checkedCount / obligations.length) * 100
-                            )
+                            (checkedCount / obligations.length) * 100
+                          )
                           : 0}
                         %
                       </span>
@@ -1356,7 +1362,7 @@ export default function Home() {
                           ...item,
                           completed:
                             completedObligations[
-                              `${activeDocumentId}-${index}`
+                            `${activeDocumentId}-${index}`
                             ] ?? item.completed,
                         }}
                         onToggle={() =>
