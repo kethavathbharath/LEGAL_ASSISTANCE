@@ -6,7 +6,6 @@
 dist/
 build/
 *.dist
-api/index.js
 
 # Environment variables
 .env
